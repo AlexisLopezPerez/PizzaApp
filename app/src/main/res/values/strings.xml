@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Pizza</string>
+    <string name="hawaiana">Pizza con queso y piña</string>
+    <string name="pepperoni">Pizza con queso y pepperoni</string>
+    <string name="cuatro_estaciones">Pizza con champiñones, pepperoni, piña y queso</string>
+    <string name="margarita">Pizza con queso, albaca y tomate</string>
+    <string name="queso">Pizza con doble queso</string>
+    <string name="mexicana">Pizza con queso, carne, rajas, aceitunas, pimientos y cebolla</string>
+    <string name="combinazione">Pizza con queso, longaniza, chorizo, champiñones, pimiento y cebolla</string>
+    <string name="agregarCarrito">Agregar al carrito</string>
+</resources>
