@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pizza.Modelo.pizza
 import com.example.pizza.datos.Datos
+import com.example.pizza.ui.navigation.AppNavigation
 import com.example.pizza.ui.theme.PizzaTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,64 +42,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PizzaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PizzaApp(Modifier.padding(innerPadding))
-                }
+
+                AppNavigation()
+                    //PizzaApp(Modifier.padding(innerPadding))
+
             }
         }
     }
 }
 
-@Composable
-fun PizzaApp(modifier: Modifier = Modifier){
-    ListaDePizzas(pizzaList = Datos().loadPizzas())
-}
-
-@Composable
-fun PizzaCard(pizza: pizza, modifier: Modifier = Modifier){
-    var cant by remember { mutableIntStateOf(0) }
-    Card(modifier = modifier,
-        colors = CardDefaults.cardColors(
-            contentColor = MaterialTheme.colorScheme.primaryContainer
-        )) {
-        Column {
-            Image(painter = painterResource(pizza.imageResourceId),
-                contentDescription = stringResource(pizza.stringResourceId),
-                modifier = modifier.fillMaxWidth().height(194.dp),
-                contentScale = ContentScale.Crop)
-
-            Text(modifier = modifier.padding(16.dp),
-                text = stringResource(pizza.stringResourceId),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer)
-
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-
-                Button(modifier = modifier, onClick = {if(cant>0) cant--}) { Text("-") }
-
-                Text(text= "$cant", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
-
-                Button(modifier = modifier, onClick = {cant++}) { Text("+") }
-
-                Button(modifier = modifier, onClick = {}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
-            }
-        }
-    }
-}
-
-@Preview (showBackground = true)
-@Composable
-private fun PizzaCardPreview(){
-    PizzaTheme{
-        PizzaApp()
-    }
-}
-
-@Composable
-fun ListaDePizzas(pizzaList: List<pizza>, modifier: Modifier = Modifier){
-    LazyColumn(modifier = modifier) {
-        items(pizzaList){
-            pizza -> PizzaCard(pizza = pizza, modifier = Modifier.padding(8.dp))
-        }
-    }
-}
