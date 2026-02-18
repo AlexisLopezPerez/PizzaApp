@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.pizza.ui.screens.CarritoScreen
 import com.example.pizza.ui.screens.LoginScreen
 import com.example.pizza.ui.screens.PizzaApp
 
@@ -16,16 +17,22 @@ fun AppNavigation(){
     //Paso 2 Crear el Nav Host donde estaran todos los destinos
 
     NavHost(
-        navController = navController, startDestination = "login"
+        navController = navController, startDestination = Screens.Login.route
     ){
         //Paso 3 Declarar las rutas de navegacion
-        composable(route= "login"){
+        composable(route= Screens.Login.route){
             LoginScreen( onLoginClick = {
-                navController.navigate("pizzas")
+                navController.navigate(Screens.PizzaList.route)
             })
         }
-        composable(route= "pizzas"){
-            PizzaApp()
+        composable(route= Screens.PizzaList.route){
+            PizzaApp(
+                onPizzaClick = {navController.navigate(Screens.Carrito.route)}
+            )
+        }
+
+        composable(route = Screens.Carrito.route){
+            CarritoScreen()
         }
     }
 }

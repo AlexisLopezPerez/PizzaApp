@@ -31,7 +31,7 @@ import com.example.pizza.datos.Datos
 import com.example.pizza.ui.theme.PizzaTheme
 
 @Composable
-fun PizzaCard(pizza: pizza, modifier: Modifier = Modifier){
+fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, modifier: Modifier = Modifier){
     var cant by remember { mutableIntStateOf(0) }
     Card(modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -56,30 +56,30 @@ fun PizzaCard(pizza: pizza, modifier: Modifier = Modifier){
 
                 Button(modifier = modifier, onClick = {cant++}) { Text("+") }
 
-                Button(modifier = modifier, onClick = {}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
+                Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
             }
         }
     }
 }
 
 @Composable
-fun PizzaApp(modifier: Modifier = Modifier){
-    ListaDePizzas(pizzaList = Datos().loadPizzas())
+fun PizzaApp(onPizzaClick: () -> Unit, modifier: Modifier = Modifier){
+    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = Datos().loadPizzas())
 }
 
 @Preview (showBackground = true)
 @Composable
 private fun PizzaCardPreview(){
     PizzaTheme{
-        PizzaApp()
+        PizzaApp(onPizzaClick = {})
     }
 }
 
 @Composable
-fun ListaDePizzas(pizzaList: List<pizza>, modifier: Modifier = Modifier){
+fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<pizza>, modifier: Modifier = Modifier){
     LazyColumn(modifier = modifier) {
         items(pizzaList){
-                pizza -> PizzaCard(pizza = pizza, modifier = Modifier.padding(8.dp))
+                pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza, modifier = Modifier.padding(8.dp))
         }
     }
 }

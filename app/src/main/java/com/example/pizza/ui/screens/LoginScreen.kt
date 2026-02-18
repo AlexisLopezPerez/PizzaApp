@@ -22,6 +22,6 @@ fun LoginScreen(onLoginClick: () -> Unit){
 
 @Preview
 @Composable
-fun Preview(){
+private fun Preview(){
     LoginScreen(onLoginClick = {})
 }
