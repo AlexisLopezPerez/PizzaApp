@@ -31,8 +31,8 @@ import com.example.pizza.ui.theme.PizzaTheme
 @Composable
 fun AppNavigation(){
     //Paso 1 Crear el Nav Controller
-    val navController = rememberNavController()
 
+    val navController = rememberNavController()
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(title = { Text("Chess Pizza") },

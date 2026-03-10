@@ -23,16 +23,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+/*import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource*/
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pizza.Modelo.pizza
 import com.example.pizza.R
 import com.example.pizza.datos.Datos
 import com.example.pizza.ui.theme.PizzaTheme
+import com.example.pizza.viewModel.PizzaViewModel
 
 @Composable
-fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, modifier: Modifier = Modifier){
-    var cant by remember { mutableIntStateOf(0) }
+fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, cantidad: Int, onAgregarClick: () -> Unit, onQuitarClick: () -> Unit, modifier: Modifier = Modifier){
+
     Card(modifier = modifier,
         colors = CardDefaults.cardColors(
             contentColor = MaterialTheme.colorScheme.primaryContainer
@@ -50,11 +55,11 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, modifier: Modifier = Modif
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
 
-                Button(modifier = modifier, onClick = {if(cant>0) cant--}) { Text("-") }
+                Button(modifier = modifier, onClick = {onQuitarClick()}) { Text("-") }
 
-                Text(text= "$cant", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Text(text= "$cantidad", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                Button(modifier = modifier, onClick = {cant++}) { Text("+") }
+                Button(modifier = modifier, onClick = {onAgregarClick()}) { Text("+") }
 
                 Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
             }
@@ -63,8 +68,8 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, modifier: Modifier = Modif
 }
 
 @Composable
-fun PizzaApp(onPizzaClick: () -> Unit, modifier: Modifier = Modifier){
-    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = Datos().loadPizzas())
+fun PizzaApp(onPizzaClick: () -> Unit, viewModel: PizzaViewModel = viewModel(), modifier: Modifier = Modifier){
+    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = Datos().loadPizzas(), viewModel)
 }
 
 @Preview (showBackground = true)
@@ -76,10 +81,13 @@ private fun PizzaCardPreview(){
 }
 
 @Composable
-fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<pizza>, modifier: Modifier = Modifier){
+fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<pizza>, viewModel: PizzaViewModel,modifier: Modifier = Modifier){
     LazyColumn(modifier = modifier) {
         items(pizzaList){
-                pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza, modifier = Modifier.padding(8.dp))
+                pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza,
+            cantidad = viewModel.obtenerCantidad(pizza.stringResourceId),
+            onAgregarClick = {viewModel.agregarAlCarrito(pizza.stringResourceId)},
+            onQuitarClick = {viewModel.quitarDelCarrito(pizza.stringResourceId)}, modifier = Modifier.padding(8.dp))
         }
     }
 }
