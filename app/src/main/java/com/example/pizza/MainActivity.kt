@@ -31,7 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.pizza.Modelo.pizza
+
 import com.example.pizza.datos.Datos
 import com.example.pizza.ui.navigation.AppNavigation
 import com.example.pizza.ui.theme.PizzaTheme

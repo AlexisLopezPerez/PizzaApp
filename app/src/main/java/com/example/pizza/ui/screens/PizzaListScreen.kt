@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -29,14 +30,15 @@ import androidx.compose.ui.res.stringResource*/
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.pizza.Modelo.pizza
+
 import com.example.pizza.R
 import com.example.pizza.datos.Datos
+import com.example.pizza.datos.Pizza
 import com.example.pizza.ui.theme.PizzaTheme
 import com.example.pizza.viewModel.PizzaViewModel
 
 @Composable
-fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, cantidad: Int, onAgregarClick: () -> Unit, onQuitarClick: () -> Unit, modifier: Modifier = Modifier){
+fun PizzaCard(onPizzaClick: () -> Unit, pizza: Pizza, cantidad: Int, onAgregarClick: () -> Unit, onQuitarClick: () -> Unit, modifier: Modifier = Modifier){
 
     Card(modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -55,7 +57,7 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, cantidad: Int, onAgregarCl
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
 
-                Button(modifier = modifier, onClick = {onQuitarClick()}) { Text("-") }
+                Button(modifier = modifier, onClick = {onQuitarClick()}, enabled = cantidad<pizza.cantidad ) { Text("-") }
 
                 Text(text= "$cantidad", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
 
@@ -69,7 +71,8 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: pizza, cantidad: Int, onAgregarCl
 
 @Composable
 fun PizzaApp(onPizzaClick: () -> Unit, viewModel: PizzaViewModel = viewModel(), modifier: Modifier = Modifier){
-    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = Datos().loadPizzas(), viewModel)
+    val pizzaList by viewModel.pizzaList.collectAsState(initial = emptyList())
+    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = pizzaList, viewModel)
 }
 
 @Preview (showBackground = true)
@@ -81,7 +84,7 @@ private fun PizzaCardPreview(){
 }
 
 @Composable
-fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<pizza>, viewModel: PizzaViewModel,modifier: Modifier = Modifier){
+fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<Pizza>, viewModel: PizzaViewModel,modifier: Modifier = Modifier){
     LazyColumn(modifier = modifier) {
         items(pizzaList){
                 pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza,
