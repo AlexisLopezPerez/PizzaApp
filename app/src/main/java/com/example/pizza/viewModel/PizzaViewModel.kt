@@ -4,9 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pizza.datos.Datos
 
 import com.example.pizza.datos.PizzaDAO
+import kotlinx.coroutines.launch
 
 
 class PizzaViewModel(private val pizzaDAO: PizzaDAO): ViewModel() {
@@ -28,4 +30,16 @@ class PizzaViewModel(private val pizzaDAO: PizzaDAO): ViewModel() {
     }
 
     //val pizzaList: State<List<pizza>> = _pizzas
+
+    //El INIT hace que el codigo se ejecute en paralelo al iniciar la app
+    init {
+        viewModelScope.launch {
+            //1. Cargamos la lista de la clase Datos
+            val pizzasAInsertar = Datos().loadPizzas()
+            //2. Los insertamos en un ciclo forEach
+            pizzasAInsertar.forEach { pizza ->
+                pizzaDAO.insert(pizza)
+            }
+        }
+    }
 }

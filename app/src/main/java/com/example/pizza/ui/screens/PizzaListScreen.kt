@@ -57,11 +57,11 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: Pizza, cantidad: Int, onAgregarCl
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
 
-                Button(modifier = modifier, onClick = {onQuitarClick()}, enabled = cantidad<pizza.cantidad ) { Text("-") }
+                Button(modifier = modifier, onClick = {onQuitarClick()}  ) { Text("-") }
 
                 Text(text= "$cantidad", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                Button(modifier = modifier, onClick = {onAgregarClick()}) { Text("+") }
+                Button(modifier = modifier, onClick = {onAgregarClick()}, enabled = cantidad<pizza.cantidad) { Text("+") }
 
                 Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
             }
