@@ -55,7 +55,7 @@ fun AppNavigation(){
 
     //Para saber en que pantalla estoy
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val rutaActual = navBackStackEntry?.destination?.route
+    //val rutaActual = navBackStackEntry?.destination?.route
 
         Scaffold(
             topBar = {

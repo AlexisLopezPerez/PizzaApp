@@ -68,7 +68,7 @@ fun PizzaCard(onPizzaClick: () -> Unit,
 
                 Button(modifier = modifier, onClick = {onAgregarClick()}, enabled = cantidad<pizza.cantidad) { Text("+") }
 
-                Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
+                //Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
 
                 Button(onClick = {onEditarClick(pizza.id)}) { Text("Editar") }
             }
@@ -77,28 +77,36 @@ fun PizzaCard(onPizzaClick: () -> Unit,
 }
 
 @Composable
-fun PizzaApp(onPizzaClick: () -> Unit, viewModel: PizzaViewModel = viewModel(), onEditarClick: (Int) -> Unit, modifier: Modifier = Modifier){
+fun PizzaApp(onPizzaClick: () -> Unit,
+             viewModel: PizzaViewModel = viewModel(),
+             onEditarClick: (Int) -> Unit,
+             modifier: Modifier = Modifier)
+{
     val pizzaList by viewModel.pizzaList.collectAsState(initial = emptyList())
-    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = pizzaList, viewModel)
+    ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = pizzaList, viewModel, onEditarClick)
 }
-
+/*
 @Preview (showBackground = true)
 @Composable
 private fun PizzaCardPreview(){
     PizzaTheme{
         PizzaApp(onPizzaClick = {})
     }
-}
+}*/
 
 @Composable
-fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<Pizza>, viewModel: PizzaViewModel,modifier: Modifier = Modifier){
+fun ListaDePizzas(onPizzaClick: () -> Unit,
+                  pizzaList: List<Pizza>,
+                  viewModel: PizzaViewModel,
+                  onEditarClick: (Int) -> Unit,
+                  modifier: Modifier = Modifier){
     LazyColumn(modifier = modifier) {
         items(pizzaList){
                 pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza,
             cantidad = viewModel.obtenerCantidad(pizza.stringResourceId),
             onAgregarClick = {viewModel.agregarAlCarrito(pizza.stringResourceId)},
             onQuitarClick = {viewModel.quitarDelCarrito(pizza.stringResourceId)},
-            onEditarClick = {viewModel.editarCantidad(pizza.stringResourceId)},
+            onEditarClick = onEditarClick,
             modifier = Modifier.padding(8.dp))
         }
     }

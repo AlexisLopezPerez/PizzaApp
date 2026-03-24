@@ -27,7 +27,7 @@ import com.example.pizza.viewModel.PizzaViewModel
 
 @Composable
 fun EditarPizza(pizza: Pizza,
-                onEditarClick: (Int) -> Unit){
+                onEditarClick: (Pizza) -> Unit){
     var cantidadPizza by remember { mutableStateOf(pizza.cantidad.toString()) }
 
     Box(modifier = Modifier.fillMaxSize().padding(20.dp))
@@ -45,7 +45,13 @@ fun EditarPizza(pizza: Pizza,
             Spacer(modifier = Modifier.height(25.dp))
 
             Button(
-                onClick = onEditarClick
+                onClick = {
+                    val nuevaCantidad = cantidadPizza.toIntOrNull()?: pizza.cantidad
+
+                    val pizzaActualizada = pizza.copy(cantidad = nuevaCantidad)
+
+                    onEditarClick(pizzaActualizada)
+                }
             )
             {
                 Text("Editar Pizza")
