@@ -38,7 +38,12 @@ import com.example.pizza.ui.theme.PizzaTheme
 import com.example.pizza.viewModel.PizzaViewModel
 
 @Composable
-fun PizzaCard(onPizzaClick: () -> Unit, pizza: Pizza, cantidad: Int, onAgregarClick: () -> Unit, onQuitarClick: () -> Unit, modifier: Modifier = Modifier){
+fun PizzaCard(onPizzaClick: () -> Unit,
+              pizza: Pizza, cantidad: Int,
+              onAgregarClick: () -> Unit,
+              onQuitarClick: () -> Unit,
+              onEditarClick: (Int) -> Unit,
+              modifier: Modifier = Modifier){
 
     Card(modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -64,13 +69,15 @@ fun PizzaCard(onPizzaClick: () -> Unit, pizza: Pizza, cantidad: Int, onAgregarCl
                 Button(modifier = modifier, onClick = {onAgregarClick()}, enabled = cantidad<pizza.cantidad) { Text("+") }
 
                 Button(modifier = modifier, onClick = {onPizzaClick()}) { Text(text = stringResource(id = R.string.agregarCarrito)) }
+
+                Button(onClick = {onEditarClick(pizza.id)}) { Text("Editar") }
             }
         }
     }
 }
 
 @Composable
-fun PizzaApp(onPizzaClick: () -> Unit, viewModel: PizzaViewModel = viewModel(), modifier: Modifier = Modifier){
+fun PizzaApp(onPizzaClick: () -> Unit, viewModel: PizzaViewModel = viewModel(), onEditarClick: (Int) -> Unit, modifier: Modifier = Modifier){
     val pizzaList by viewModel.pizzaList.collectAsState(initial = emptyList())
     ListaDePizzas(onPizzaClick = onPizzaClick ,pizzaList = pizzaList, viewModel)
 }
@@ -90,7 +97,9 @@ fun ListaDePizzas(onPizzaClick: () -> Unit, pizzaList: List<Pizza>, viewModel: P
                 pizza -> PizzaCard(onPizzaClick = onPizzaClick, pizza = pizza,
             cantidad = viewModel.obtenerCantidad(pizza.stringResourceId),
             onAgregarClick = {viewModel.agregarAlCarrito(pizza.stringResourceId)},
-            onQuitarClick = {viewModel.quitarDelCarrito(pizza.stringResourceId)}, modifier = Modifier.padding(8.dp))
+            onQuitarClick = {viewModel.quitarDelCarrito(pizza.stringResourceId)},
+            onEditarClick = {viewModel.editarCantidad(pizza.stringResourceId)},
+            modifier = Modifier.padding(8.dp))
         }
     }
 }

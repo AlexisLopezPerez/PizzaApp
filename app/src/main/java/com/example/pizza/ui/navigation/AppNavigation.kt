@@ -15,17 +15,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pizza.datos.AppDatabase
 import com.example.pizza.ui.screens.CarritoScreen
+import com.example.pizza.ui.screens.EditarPizza
 import com.example.pizza.ui.screens.LoginScreen
 import com.example.pizza.ui.screens.PizzaApp
 import com.example.pizza.ui.theme.PizzaTheme
@@ -45,6 +50,12 @@ fun AppNavigation(){
     val db = AppDatabase.getInstance(contexto)
 
     val factory = pizzaViewModelFactory(db.pizzaDao())
+
+    val pizzaViewModel: PizzaViewModel = viewModel(factory = factory)
+
+    //Para saber en que pantalla estoy
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val rutaActual = navBackStackEntry?.destination?.route
 
         Scaffold(
             topBar = {
@@ -73,15 +84,36 @@ fun AppNavigation(){
                         })
                     }
                     composable(route= Screens.PizzaList.route){
-                        val pizzaViewModel: PizzaViewModel = viewModel(factory = factory)
                         PizzaApp(
                             onPizzaClick = {navController.navigate(Screens.Carrito.route)},
-                            viewModel = pizzaViewModel
+                            viewModel = pizzaViewModel,
+                            onEditarClick = {id ->
+                                navController.navigate("pizza_editar/$id")
+                            }
                         )
                     }
 
                     composable(route = Screens.Carrito.route){
                         CarritoScreen()
+                    }
+
+                    composable(route = Screens.PizzaEdit.route,
+                        arguments = listOf(navArgument(name = "pizzaId") {type = NavType.IntType})
+                        )
+                    {   backStackEntry ->
+                        val pizzaId = backStackEntry.arguments?.getInt("pizzaId") ?: 0
+                        val pizzaEditar = pizzaViewModel.getPizzaById(pizzaId)
+
+                        if(pizzaEditar != null){
+                            EditarPizza(
+                                pizza = pizzaEditar,
+                                onEditarClick = {pizzaActualizada ->
+                                    pizzaViewModel.actualizarPizza(pizzaActualizada)
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+
                     }
                 }
             }
