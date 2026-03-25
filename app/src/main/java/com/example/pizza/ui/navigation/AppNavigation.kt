@@ -49,7 +49,7 @@ fun AppNavigation(){
 
     val db = AppDatabase.getInstance(contexto)
 
-    val factory = pizzaViewModelFactory(db.pizzaDao())
+    val factory = pizzaViewModelFactory(db.pizzaDao(), contexto.applicationContext)
 
     val pizzaViewModel: PizzaViewModel = viewModel(factory = factory)
 

@@ -1,5 +1,6 @@
 package com.example.pizza.viewModel
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -14,24 +15,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
-class PizzaViewModel(private val pizzaDAO: PizzaDAO): ViewModel() {
+class PizzaViewModel(private val pizzaDAO: PizzaDAO, private val contexto: Context): ViewModel() {
     //private val _pizzas = mutableStateOf(value = Datos().loadPizzas())
-    private val _carrito = mutableStateMapOf<Int, Int>()
+    private val _carrito = mutableStateMapOf<String, Int>()
 
     val pizzaList = pizzaDAO.getAllpizzas().stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
         initialValue = emptyList()
     )
-    fun obtenerCantidad(pizzaID: Int): Int = _carrito[pizzaID]?: 0
+    fun obtenerCantidad(pizzaID: String): Int = _carrito[pizzaID]?: 0
 
-    fun agregarAlCarrito(pizzaID: Int){
+    fun agregarAlCarrito(pizzaID: String){
         val actual = _carrito[pizzaID] ?: 0
         _carrito[pizzaID] = actual + 1
     }
 
     //No estaba en la clase
-    fun quitarDelCarrito(pizzaID: Int){
+    fun quitarDelCarrito(pizzaID: String){
         val actual = _carrito[pizzaID] ?: 0
         _carrito[pizzaID] = maxOf(0,actual - 1)
     }
@@ -42,7 +43,7 @@ class PizzaViewModel(private val pizzaDAO: PizzaDAO): ViewModel() {
     init {
         viewModelScope.launch {
             //1. Cargamos la lista de la clase Datos
-            val pizzasAInsertar = Datos().loadPizzas()
+            val pizzasAInsertar = Datos(contexto).loadPizzas()
             //2. Los insertamos en un ciclo forEach
             pizzasAInsertar.forEach { pizza ->
                 pizzaDAO.insert(pizza)

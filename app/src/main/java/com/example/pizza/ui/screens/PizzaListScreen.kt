@@ -1,5 +1,6 @@
 package com.example.pizza.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource*/
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 
 import com.example.pizza.R
 import com.example.pizza.datos.Datos
@@ -50,13 +52,24 @@ fun PizzaCard(onPizzaClick: () -> Unit,
             contentColor = MaterialTheme.colorScheme.primaryContainer
         )) {
         Column {
-            Image(painter = painterResource(pizza.imageResourceId),
-                contentDescription = stringResource(pizza.stringResourceId),
+            /*Image(painter = painterResource(pizza.imageResourceId),
+                contentDescription = pizza.stringResourceId,
                 modifier = modifier.fillMaxWidth().height(194.dp),
-                contentScale = ContentScale.Crop)
+                contentScale = ContentScale.Crop)*/
+            AsyncImage(
+                model = pizza.imageUri,
+                contentDescription = ""/*stringResource(pizza.stringResourceId)*/,
+                onError = {error ->
+                    //Esto imprimira el error real en el logcat
+                    Log.e("PizzaApp", "Error al cargar: ${error.result.throwable}")
+                },
+                modifier = Modifier
+                    .fillMaxWidth().height(194.dp),
+                contentScale = ContentScale.Crop
+            )
 
             Text(modifier = modifier.padding(16.dp),
-                text = stringResource(pizza.stringResourceId),
+                text = pizza.stringResourceId,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer)
 

@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pizzas", indices = [Index(value = ["stringResourceId"], unique = true)] )
 data class Pizza(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val stringResourceId: Int,
-    @DrawableRes val imageResourceId: Int,
+    val stringResourceId: String,
+    //@DrawableRes val imageResourceId: Int,
+    val imageUri: String,
     val cantidad: Int
 )
